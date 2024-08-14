@@ -7,11 +7,14 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@zegocloud/zego-uikit-prebuilt": "^2.6.2",
+    "agora-rtc-sdk-ng": "^4.21.0",
+    "agora-rtm-sdk": "2.3.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.0",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "zego-express-engine-webrtc": "^3.5.0"
   },
   "scripts": {
     "start": "react-scripts start",

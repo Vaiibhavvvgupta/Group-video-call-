@@ -22,6 +22,7 @@ export default function VideoCallRoom() {
   const [isMuted, setIsMuted] = useState(false); // State to track mute/unmute
   const location = useLocation();
   const roomID = getUrlParams(location.pathname);
+  const zp = useRef(null); // Reference to the Zego UI Kit instance
 
   useEffect(() => {
     const initializeMeeting = async () => {
@@ -33,21 +34,26 @@ export default function VideoCallRoom() {
 
         console.log('Generated Kit Token:', kitToken);
 
-        const zp = ZegoUIKitPrebuilt.create(kitToken);
-        if (zp) {
+        zp.current = ZegoUIKitPrebuilt.create(kitToken);
+        if (zp.current) {
           console.log('ZegoUIKitPrebuilt instance created successfully.');
 
           if (containerRef.current) {
             console.log('Container reference is valid.');
 
-            zp.joinRoom({
+            zp.current.joinRoom({
+              turnOnCameraWhenJoining: false,
+              showMyCameraToggleButton: false,
+              showAudioVideoSettingsButton: true,
+              showScreenSharingButton: false,
+              showPreJoinView: false,
               container: containerRef.current,
               scenario: {
                 mode: ZegoUIKitPrebuilt.GroupCall, // Group voice call
               },
               userConfig: {
                 audio: true,  // Ensure audio is enabled
-                video: false  // Disable video
+                video: false,
               }
             });
           } else {
@@ -65,33 +71,43 @@ export default function VideoCallRoom() {
   }, [roomID]);
 
   const handleMuteToggle = () => {
-    if (containerRef.current) {
-      const audioTracks = containerRef.current.getAudioTracks();
-      audioTracks.forEach(track => track.enabled = !isMuted);
+    // Example: Replace with actual SDK call for muting/unmuting
+    if (zp.current) {
+      console.log('Mute/Unmute functionality needs to be implemented according to Zego SDK.');
       setIsMuted(!isMuted);
     }
   };
 
   return (
-    <div
-      className="myCallContainer"
-      ref={containerRef}
-      style={{ width: '100vw', height: '100vh', position: 'relative' }}
-    >
-      <p>Loading voice call...</p>
+    <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
+      <div
+        className="myCallContainer"
+        ref={containerRef}
+        style={{
+           overflowX1: 'auto',
+          width: '500px', // Adjust width as needed
+          height: '300px', // Adjust height as needed
+          position: 'absolute',
+          bottom: '60px', // Distance from the bottom
+          right: '60px',  // Distance from the right
+          backgroundColor: 'rgba(0, 0, 0, 0.7)', // Optional: add a background color with transparency
+          borderRadius: '8px', // Optional: add rounded corners
+          overflow: 'hidden' // Ensure no overflow outside the container
+        }}
+      >
+        <p>Loading voice call...</p>
+      </div>
       <button
         onClick={handleMuteToggle}
         style={{
           position: 'absolute',
           bottom: '20px',
-          right: '20px',
-          padding: '10px 20px',
-          fontSize: '16px',
-          backgroundColor: isMuted ? 'red' : 'green',
+          left: '20px',
+          padding: '10px',
+          backgroundColor: '#007BFF',
           color: 'white',
           border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer'
+          cursor: 'pointer',
         }}
       >
         {isMuted ? 'Unmute' : 'Mute'}
